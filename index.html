@@ -4,29 +4,30 @@
 <head>
   <meta charset="UTF-8">
   <title>Zaky Projects</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel="stylesheet" href="style.css"> <!-- :contentReference[oaicite:3]{index=3} -->
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="style.css">
   <link rel="shortcut icon" href="favicon.ico" type="image/x-icon">
 </head>
 <body>
   <!-- Particle canvas behind everything -->
   <canvas id="particle-canvas"></canvas>
 
-  <header>🔥 Zaky Projects Hub</header>
+  <!-- Content wrapper, sits on top of particles -->
+  <div class="content">
+    <header>🔥 Zaky Projects Hub</header>
 
-  <div class="projects">
-    <a href="https://aboutme.zakyprojects.site" target="_blank">✍️ About Me</a>
-    <a href="https://netflix.zakyprojects.site" target="_blank">📺 Netflix Clone</a>
-    <a href="https://ai.zakyprojects.site" target="_blank">🤖 Meet Zaky's Personal AI Assistant</a>
-    <a href="#">🚧 More Projects Coming Soon...</a>
+    <div class="projects">
+      <a href="https://aboutme.zakyprojects.site" target="_blank">✍️ About Me</a>
+      <a href="https://netflix.zakyprojects.site" target="_blank">📺 Netflix Clone</a>
+      <a href="https://ai.zakyprojects.site" target="_blank">🤖 Meet Zaky's Personal AI Assistant</a>
+      <a href="#">🚧 More Projects Coming Soon...</a>
+    </div>
+
+    <footer>Built with love by Zakria Khan Muhammadzai</footer>
   </div>
 
-  <footer>
-    Built with love by Zakria Khan Muhammadzai
-  </footer>
-
   <script>
-  // Particle Connection effect (adapted from Saheeranas’s demo)
+  // Particle Connection effect
   (function() {
     const canvas = document.getElementById('particle-canvas');
     const ctx = canvas.getContext('2d');
@@ -65,21 +66,17 @@
 
     function animate() {
       ctx.clearRect(0, 0, canvas.width, canvas.height);
-
       particles.forEach(p => {
-        // move
         p.x += p.vx;
         p.y += p.vy;
-        // bounce
         if (p.x < 0 || p.x > canvas.width) p.vx *= -1;
         if (p.y < 0 || p.y > canvas.height) p.vy *= -1;
-        // draw point
-        ctx.fillStyle = 'rgba(88,166,255,0.7)'; // bluish-green hue
+
+        ctx.fillStyle = 'rgba(88,166,255,0.7)';
         ctx.beginPath();
         ctx.arc(p.x, p.y, 2, 0, Math.PI * 2);
         ctx.fill();
 
-        // connect to other particles
         for (let j = p.index + 1; j < particles.length; j++) {
           const q = particles[j];
           const dx = p.x - q.x, dy = p.y - q.y;
@@ -94,7 +91,6 @@
           }
         }
 
-        // connect to mouse
         if (mouse.x !== null) {
           const dxm = p.x - mouse.x, dym = p.y - mouse.y;
           const distM = Math.hypot(dxm, dym);
@@ -108,7 +104,6 @@
           }
         }
       });
-
       requestAnimationFrame(animate);
     }
 
