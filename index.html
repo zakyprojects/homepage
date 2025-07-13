@@ -27,16 +27,32 @@
   </div>
 
   <script>
-  // Particle Connection effect
+  // Responsive Particle Connection effect
   (function() {
     const canvas = document.getElementById('particle-canvas');
     const ctx = canvas.getContext('2d');
     let particles = [], mouse = { x: null, y: null };
-    const maxParticles = 100;
-    const connectDistance = 100;
+    let maxParticles, connectDistance;
+
+    // Compute settings based on current width
+    function computeSettings() {
+      const w = window.innerWidth;
+      if (w <= 480) {         // small phones
+        maxParticles = 30;
+        connectDistance = 60;
+      } else if (w <= 768) {  // tablets / large phones
+        maxParticles = 60;
+        connectDistance = 80;
+      } else {                // desktops
+        maxParticles = 100;
+        connectDistance = 100;
+      }
+    }
 
     function init() {
+      computeSettings();
       resize();
+      particles = []; // reset array
       for (let i = 0; i < maxParticles; i++) {
         particles.push({
           x: Math.random() * canvas.width,
@@ -54,7 +70,11 @@
       canvas.height = window.innerHeight;
     }
 
-    window.addEventListener('resize', resize);
+    window.addEventListener('resize', () => {
+      // on resize, re-init to apply new particle count
+      init();
+    });
+
     window.addEventListener('mousemove', e => {
       mouse.x = e.clientX;
       mouse.y = e.clientY;
@@ -67,16 +87,18 @@
     function animate() {
       ctx.clearRect(0, 0, canvas.width, canvas.height);
       particles.forEach(p => {
-        p.x += p.vx;
-        p.y += p.vy;
+        // move + bounce
+        p.x += p.vx; p.y += p.vy;
         if (p.x < 0 || p.x > canvas.width) p.vx *= -1;
         if (p.y < 0 || p.y > canvas.height) p.vy *= -1;
 
+        // draw point
         ctx.fillStyle = 'rgba(88,166,255,0.7)';
         ctx.beginPath();
         ctx.arc(p.x, p.y, 2, 0, Math.PI * 2);
         ctx.fill();
 
+        // connect to peers
         for (let j = p.index + 1; j < particles.length; j++) {
           const q = particles[j];
           const dx = p.x - q.x, dy = p.y - q.y;
@@ -91,6 +113,7 @@
           }
         }
 
+        // connect to mouse
         if (mouse.x !== null) {
           const dxm = p.x - mouse.x, dym = p.y - mouse.y;
           const distM = Math.hypot(dxm, dym);
@@ -104,11 +127,14 @@
           }
         }
       });
+
       requestAnimationFrame(animate);
     }
 
+    // first run
     init();
   })();
-  </script>
+</script>
+
 </body>
 </html>
