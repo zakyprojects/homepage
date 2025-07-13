@@ -1,3 +1,16 @@
+/* style.css */
+/* Particle canvas behind content */
+#particle-canvas {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: -1;           /* sit behind header/projects/footer */
+  background: transparent;/* let your gradient bleed through */
+}
+
+/* Base Styles :contentReference[oaicite:4]{index=4} */
 * {
   box-sizing: border-box;
 }
